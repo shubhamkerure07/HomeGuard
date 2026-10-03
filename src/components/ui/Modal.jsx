@@ -21,25 +21,25 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md' })
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity"
         onClick={onClose}
       />
 
-      {/* Modal */}
+      {/* Modal Card */}
       <div
-        className={`relative glass rounded-2xl p-6 w-full ${sizeClasses[size]} animate-slide-in max-h-[90vh] overflow-y-auto`}
+        className={`relative bg-white rounded-2xl p-6 w-full ${sizeClasses[size]} border border-slate-200 shadow-2xl z-10 max-h-[90vh] overflow-y-auto page-fade-enter`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-white">{title}</h2>
+        <div className="flex items-center justify-between pb-4 mb-5 border-b border-slate-100">
+          <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
           >
-            <X size={20} className="text-slate-400" />
+            <X size={18} />
           </button>
         </div>
 

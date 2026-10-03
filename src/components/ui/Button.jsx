@@ -1,29 +1,29 @@
-export default function Button({ children, variant = 'primary', size = 'md', onClick, disabled = false, className = '' }) {
+export default function Button({ children, variant = 'primary', size = 'md', onClick, disabled = false, className = '', type = 'button' }) {
   const variants = {
-    primary: 'bg-accent-blue hover:bg-blue-600 text-white shadow-[0_0_15px_rgba(59,130,246,0.3)]',
-    danger: 'bg-accent-red hover:bg-red-600 text-white shadow-[0_0_15px_rgba(239,68,68,0.3)]',
-    success: 'bg-accent-green hover:bg-emerald-600 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)]',
-    warning: 'bg-accent-amber hover:bg-amber-600 text-white shadow-[0_0_15px_rgba(245,158,11,0.3)]',
-    ghost: 'bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10',
-    outline: 'bg-transparent hover:bg-white/5 text-slate-300 border border-white/20',
+    primary: 'bg-slate-900 hover:bg-slate-800 text-white shadow-sm border border-transparent',
+    secondary: 'bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200/80',
+    outline: 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-sm',
+    ghost: 'bg-transparent hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-transparent',
+    danger: 'bg-rose-600 hover:bg-rose-700 text-white shadow-sm border border-transparent',
+    warning: 'bg-amber-600 hover:bg-amber-700 text-white shadow-sm border border-transparent',
+    success: 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm border border-transparent',
   };
 
   const sizes = {
-    sm: 'px-3 py-1.5 text-xs',
-    md: 'px-4 py-2 text-sm',
-    lg: 'px-6 py-3 text-base',
+    sm: 'px-3 py-1.5 text-xs rounded-lg',
+    md: 'px-4 py-2 text-sm rounded-xl',
+    lg: 'px-5 py-2.5 text-base rounded-xl font-medium',
   };
 
   return (
     <button
+      type={type}
       onClick={onClick}
       disabled={disabled}
       className={`
-        ${variants[variant]} ${sizes[size]}
-        rounded-xl font-medium transition-all duration-300
-        hover:scale-[1.02] active:scale-[0.98]
-        disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
-        inline-flex items-center justify-center gap-2
+        ${variants[variant] || variants.primary} ${sizes[size] || sizes.md}
+        font-medium transition-all duration-150 inline-flex items-center justify-center gap-2
+        active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100
         ${className}
       `}
     >

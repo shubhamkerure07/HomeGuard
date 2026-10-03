@@ -2,147 +2,188 @@ import React, { useState } from 'react';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
 import { useHome } from '../../context/HomeContext';
+import { Plus, Zap, Clock, Shield, DoorClosed, Lightbulb, Bell, Lock } from 'lucide-react';
 
-const RuleEditor = ({ isOpen, onClose }) => {
+export default function RuleEditor({ isOpen, onClose }) {
   const { addRule } = useHome();
-  
+
   const [name, setName] = useState('');
-  const [conditionType, setConditionType] = useState('Motion detected after time');
-  const [conditionValue, setConditionValue] = useState('22:00');
-  const [selectedActions, setSelectedActions] = useState([]);
+  const [triggerType, setTriggerType] = useState('time');
+  const [triggerTime, setTriggerTime] = useState('23:00');
+  const [triggerMode, setTriggerMode] = useState('away');
+  const [selectedActions, setSelectedActions] = useState([
+    'Lock all perimeter doors',
+    'Turn off non-essential lights'
+  ]);
 
-  const conditionTypes = [
-    'Motion detected after time',
-    'Security mode changed',
-    'Door opened/unlocked'
+  const availableActionOptions = [
+    'Lock all perimeter doors',
+    'Turn off non-essential lights',
+    'Arm security to AWAY mode',
+    'Arm security to SLEEP mode',
+    'Illuminate all house floodlights',
+    'Activate all indoor & outdoor cameras',
+    'Set bedroom climate to 22°C',
+    'Send critical mobile push notification',
   ];
 
-  const availableActions = [
-    'Turn on lights',
-    'Send alert',
-    'Activate alarm',
-    'Lock doors',
-    'Turn off lights',
-    'Activate cameras'
-  ];
-
-  const handleActionToggle = (action) => {
-    setSelectedActions(prev => 
-      prev.includes(action) 
-        ? prev.filter(a => a !== action)
-        : [...prev, action]
+  const handleToggleAction = (action) => {
+    setSelectedActions((prev) =>
+      prev.includes(action) ? prev.filter((a) => a !== action) : [...prev, action]
     );
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!name || selectedActions.length === 0) return;
-    
-    let finalCondition = conditionType;
-    if (conditionType === 'Motion detected after time') {
-      finalCondition = `Motion detected after ${conditionValue}`;
-    } else if (conditionType === 'Security mode changed') {
-      finalCondition = `Security mode changed to ${conditionValue}`;
+    if (!name.trim() || selectedActions.length === 0) return;
+
+    let conditionText = '';
+    let conditionObj = {};
+
+    if (triggerType === 'time') {
+      conditionText = `Clock reaches ${triggerTime}`;
+      conditionObj = { type: 'time', time: triggerTime };
+    } else if (triggerType === 'mode') {
+      conditionText = `Security mode set to ${triggerMode.toUpperCase()}`;
+      conditionObj = { type: 'mode_change', mode: triggerMode };
+    } else if (triggerType === 'motion') {
+      conditionText = 'Motion detected during AWAY mode';
+      conditionObj = { type: 'motion_away' };
+    } else {
+      conditionText = 'Front door unlocked by resident';
+      conditionObj = { type: 'door_unlock' };
     }
 
-    addRule({
-      name,
-      condition: finalCondition,
-      actions: selectedActions,
-      enabled: true
-    });
-    
-    // Reset and close
+    const newRule = {
+      id: `rule-${Date.now()}`,
+      name: name.trim(),
+      enabled: true,
+      conditionText,
+      condition: conditionObj,
+      actions: selectedActions.map((act) => ({ type: 'custom', text: act })),
+    };
+
+    addRule(newRule);
     setName('');
-    setConditionType('Motion detected after time');
-    setConditionValue('22:00');
-    setSelectedActions([]);
+    setSelectedActions(['Lock all perimeter doors', 'Turn off non-essential lights']);
     onClose();
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Create Automation Rule">
-      <form onSubmit={handleSubmit} className="space-y-6 mt-4">
+    <Modal isOpen={isOpen} onClose={onClose} title="Create Smart Automation Routine" size="md">
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Routine Name */}
         <div>
-          <label className="block text-sm font-light text-dark-200 mb-2">Rule Name</label>
-          <input 
-            type="text" 
+          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">
+            Routine Name
+          </label>
+          <input
+            type="text"
+            required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full bg-dark-900 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500 transition-colors"
-            placeholder="e.g. Night Mode Activation"
-            required
+            placeholder="e.g. Midnight Lockdown or Morning Wakeup"
+            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
           />
         </div>
 
-        <div className="p-4 bg-dark-900/50 rounded-xl border border-white/5 space-y-4">
-          <h4 className="text-sm font-bold text-dark-100 uppercase tracking-wider">IF Condition</h4>
-          
-          <div>
-            <label className="block text-xs font-light text-dark-300 mb-1">Trigger Type</label>
-            <select 
-              value={conditionType}
-              onChange={(e) => setConditionType(e.target.value)}
-              className="w-full bg-dark-800 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500 appearance-none"
-            >
-              {conditionTypes.map(type => (
-                <option key={type} value={type}>{type}</option>
-              ))}
-            </select>
+        {/* IF Trigger Condition */}
+        <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-3">
+          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+            IF Condition (Trigger)
+          </span>
+
+          <div className="grid grid-cols-2 gap-2">
+            {[
+              { id: 'time', label: 'Specific Time' },
+              { id: 'mode', label: 'Security Mode Change' },
+              { id: 'motion', label: 'Motion Breach' },
+              { id: 'door', label: 'Door Unlocked' },
+            ].map((trig) => (
+              <button
+                key={trig.id}
+                type="button"
+                onClick={() => setTriggerType(trig.id)}
+                className={`py-2 px-3 rounded-lg text-xs font-semibold text-left transition-all ${
+                  triggerType === trig.id
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
+                }`}
+              >
+                {trig.label}
+              </button>
+            ))}
           </div>
 
-          {conditionType === 'Motion detected after time' && (
-            <div>
-              <label className="block text-xs font-light text-dark-300 mb-1">Time</label>
-              <input 
-                type="time" 
-                value={conditionValue}
-                onChange={(e) => setConditionValue(e.target.value)}
-                className="w-full bg-dark-800 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500"
+          {triggerType === 'time' && (
+            <div className="pt-2">
+              <label className="block text-xs text-slate-600 mb-1">Trigger Time</label>
+              <input
+                type="time"
+                value={triggerTime}
+                onChange={(e) => setTriggerTime(e.target.value)}
+                className="bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-slate-900 font-semibold"
               />
             </div>
           )}
 
-          {conditionType === 'Security mode changed' && (
-            <div>
-              <label className="block text-xs font-light text-dark-300 mb-1">Mode</label>
-              <select 
-                value={conditionValue}
-                onChange={(e) => setConditionValue(e.target.value)}
-                className="w-full bg-dark-800 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500 appearance-none"
+          {triggerType === 'mode' && (
+            <div className="pt-2">
+              <label className="block text-xs text-slate-600 mb-1">When Mode Changes To</label>
+              <select
+                value={triggerMode}
+                onChange={(e) => setTriggerMode(e.target.value)}
+                className="bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-slate-900 font-semibold cursor-pointer"
               >
-                <option value="Armed (Away)">Armed (Away)</option>
-                <option value="Armed (Home)">Armed (Home)</option>
-                <option value="Disarmed">Disarmed</option>
+                <option value="away">Away Mode (Maximum Fortress)</option>
+                <option value="sleep">Sleep Mode (Night Perimeter)</option>
+                <option value="home">Home Mode (Disarmed)</option>
               </select>
             </div>
           )}
         </div>
 
-        <div className="p-4 bg-dark-900/50 rounded-xl border border-white/5 space-y-4">
-          <h4 className="text-sm font-bold text-dark-100 uppercase tracking-wider">THEN Actions</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {availableActions.map(action => (
-              <label key={action} className="flex items-center gap-3 p-3 bg-dark-800 rounded-lg border border-white/5 cursor-pointer hover:bg-dark-700 transition-colors">
-                <input 
-                  type="checkbox" 
-                  checked={selectedActions.includes(action)}
-                  onChange={() => handleActionToggle(action)}
-                  className="w-4 h-4 rounded border-white/20 bg-dark-900 text-blue-500 focus:ring-blue-500 focus:ring-offset-dark-800"
-                />
-                <span className="text-sm">{action}</span>
-              </label>
-            ))}
+        {/* THEN Actions Selection */}
+        <div className="space-y-2">
+          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+            THEN Actions (Select 1 or more)
+          </span>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {availableActionOptions.map((act) => {
+              const isChecked = selectedActions.includes(act);
+              return (
+                <label
+                  key={act}
+                  className={`flex items-center gap-2.5 p-2.5 rounded-xl border text-xs font-medium cursor-pointer transition-colors ${
+                    isChecked
+                      ? 'bg-slate-900 text-white border-slate-900 shadow-2xs'
+                      : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={() => handleToggleAction(act)}
+                    className="sr-only"
+                  />
+                  <span className="truncate">{act}</span>
+                </label>
+              );
+            })}
           </div>
         </div>
 
-        <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
-          <Button type="button" variant="secondary" onClick={onClose}>Cancel</Button>
-          <Button type="submit" variant="primary" disabled={!name || selectedActions.length === 0}>Save Rule</Button>
+        {/* Footer */}
+        <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+          <Button variant="secondary" onClick={onClose} size="sm">
+            Cancel
+          </Button>
+          <Button type="submit" variant="primary" size="sm" disabled={!name.trim() || selectedActions.length === 0}>
+            Save Automation Routine
+          </Button>
         </div>
       </form>
     </Modal>
   );
-};
-
-export default RuleEditor;
+}

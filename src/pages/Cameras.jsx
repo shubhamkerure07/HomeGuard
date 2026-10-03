@@ -1,38 +1,66 @@
 import React from 'react';
 import Header from '../components/layout/Header';
 import CameraFeed from '../components/cameras/CameraFeed';
+import Card from '../components/ui/Card';
+import Badge from '../components/ui/Badge';
 import { useHome } from '../context/HomeContext';
+import { Video, ShieldCheck, HardDrive, Wifi, Info } from 'lucide-react';
 
-const Cameras = () => {
+export default function Cameras() {
   const { cameras } = useHome();
   const total = cameras.length;
   const online = cameras.filter(c => c.isOnline ?? (c.status === 'online')).length;
 
   return (
-    <div className="min-h-screen bg-dark-900 text-white flex flex-col">
-      <Header title="Cameras" />
-      <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
-        <div className="max-w-7xl mx-auto space-y-6">
-          <div className="flex justify-between items-center bg-dark-800/60 backdrop-blur-xl p-6 rounded-2xl border border-white/10">
-            <div>
-              <h2 className="text-xl font-bold">Camera System</h2>
-              <p className="text-dark-300 font-light mt-1">Monitor your property in real-time</p>
-            </div>
-            <div className="text-right">
-              <div className="text-sm font-light text-dark-300">Total Cameras</div>
-              <div className="text-2xl font-semibold">{total} <span className="text-sm text-cyan-500 ml-1">({online} Online)</span></div>
-            </div>
-          </div>
+    <div className="space-y-6">
+      <Header
+        title="Surveillance & Camera Hub"
+        subtitle="24/7 high-definition simulated video feeds with AI motion detection"
+      />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {cameras.map(camera => (
-              <CameraFeed key={camera.id} camera={camera} />
-            ))}
+      {/* Camera System Status Banner */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <Card className="p-4 flex items-center justify-between">
+          <div>
+            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">ONLINE CAMERAS</span>
+            <div className="text-2xl font-bold text-slate-900 mt-0.5">{online} of {total} Online</div>
           </div>
-        </div>
-      </main>
+          <Badge variant={online === total ? 'success' : 'warning'}>
+            {online === total ? '100% Coverage' : `${total - online} Offline`}
+          </Badge>
+        </Card>
+
+        <Card className="p-4 flex items-center justify-between">
+          <div>
+            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">AI MOTION DETECTION</span>
+            <div className="text-2xl font-bold text-slate-900 mt-0.5">Active</div>
+          </div>
+          <Badge variant="info">Smart Vision</Badge>
+        </Card>
+
+        <Card className="p-4 flex items-center justify-between">
+          <div>
+            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">CLOUD STORAGE</span>
+            <div className="text-2xl font-bold text-slate-900 mt-0.5">30 Days Loop</div>
+          </div>
+          <Badge variant="default">Encrypted</Badge>
+        </Card>
+      </div>
+
+      {/* Notice info pill */}
+      <div className="px-4 py-2.5 bg-blue-50 border border-blue-200/80 rounded-xl text-xs text-blue-800 flex items-center gap-2">
+        <Info size={15} className="text-blue-600 shrink-0" />
+        <span>
+          <strong>Prototype Simulation Note:</strong> Camera streams are simulated for demonstration. In deployment, connect ESP32-CAM or RTSP network cameras via local NVR.
+        </span>
+      </div>
+
+      {/* 4 Cameras Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {cameras.map((camera) => (
+          <CameraFeed key={camera.id} camera={camera} />
+        ))}
+      </div>
     </div>
   );
-};
-
-export default Cameras;
+}

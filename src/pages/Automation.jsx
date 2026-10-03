@@ -6,17 +6,17 @@ import Toggle from '../components/ui/Toggle';
 import Badge from '../components/ui/Badge';
 import RuleEditor from '../components/automation/RuleEditor';
 import { useHome } from '../context/HomeContext';
-import { Trash2, Plus, Zap, ArrowRight, Clock, Activity, Lock } from 'lucide-react';
+import { Plus, Trash2, Zap, Clock, Shield, ArrowRight, CheckCircle2 } from 'lucide-react';
 
-const Automation = () => {
-  const { automationRules, toggleRule, deleteRule } = useHome();
+export default function Automation() {
+  const { automationRules = [], toggleRule, deleteRule } = useHome();
   const [isEditorOpen, setIsEditorOpen] = useState(false);
 
   const getConditionText = (rule) => {
     if (rule.conditionText) return rule.conditionText;
     if (typeof rule.condition === 'string') return rule.condition;
     if (rule.condition && typeof rule.condition === 'object') {
-      return rule.condition.time ? `Motion detected after ${rule.condition.time}` : (rule.condition.type || 'Custom Condition');
+      return rule.condition.time ? `Clock reaches ${rule.condition.time}` : (rule.condition.type || 'Custom Condition');
     }
     return 'Custom Condition';
   };
@@ -27,89 +27,118 @@ const Automation = () => {
     return String(action);
   };
 
-  const getIconForCondition = (conditionStr) => {
-    const text = String(conditionStr).toLowerCase();
-    if (text.includes('time') || text.includes('pm') || text.includes('am')) return <Clock className="w-4 h-4 text-cyan-400" />;
-    if (text.includes('motion')) return <Activity className="w-4 h-4 text-amber-400" />;
-    if (text.includes('door') || text.includes('mode') || text.includes('away')) return <Lock className="w-4 h-4 text-red-400" />;
-    return <Zap className="w-4 h-4 text-blue-400" />;
-  };
-
   return (
-    <div className="min-h-screen bg-dark-900 text-white flex flex-col">
-      <Header title="Automation" />
-      <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
-        <div className="max-w-4xl mx-auto space-y-6">
-          <div className="flex justify-between items-center bg-dark-800/60 backdrop-blur-xl p-6 rounded-2xl border border-white/10">
-            <div>
-              <h2 className="text-xl font-bold">Routines & Rules</h2>
-              <p className="text-dark-300 font-light mt-1">Automate your home security based on events</p>
+    <div className="space-y-6">
+      <Header
+        title="Smart Home Automations"
+        subtitle="Conditional routines and security actions that run automatically"
+        action={
+          <Button
+            variant="primary"
+            onClick={() => setIsEditorOpen(true)}
+            className="text-xs"
+          >
+            <Plus size={14} />
+            <span>Create Rule</span>
+          </Button>
+        }
+      />
+
+      {/* Rules List */}
+      <div className="space-y-4">
+        {automationRules.length === 0 ? (
+          <Card className="p-12 text-center flex flex-col items-center">
+            <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 mb-3">
+              <Zap size={24} />
             </div>
-            <Button onClick={() => setIsEditorOpen(true)} className="flex items-center gap-2">
-              <Plus className="w-4 h-4" /> Add Rule
+            <h3 className="text-base font-bold text-slate-900 mb-1">No automation routines active</h3>
+            <p className="text-xs text-slate-500 max-w-sm mb-4">
+              Automate perimeter lockdowns, morning lighting, or night time climate control.
+            </p>
+            <Button variant="primary" size="sm" onClick={() => setIsEditorOpen(true)}>
+              <Plus size={14} />
+              <span>Add Your First Routine</span>
             </Button>
-          </div>
+          </Card>
+        ) : (
+          automationRules.map((rule) => {
+            const condText = getConditionText(rule);
+            const isEnabled = rule.enabled;
 
-          <div className="space-y-4">
-            {automationRules.length === 0 ? (
-              <Card className="text-center p-12 flex flex-col items-center border-white/5">
-                <Zap className="w-12 h-12 text-dark-400 mb-4" />
-                <h3 className="text-lg font-semibold text-dark-200">No automation rules</h3>
-                <p className="text-sm text-dark-400 mt-2">Create your first rule to automate your home.</p>
-              </Card>
-            ) : (
-              automationRules.map(rule => {
-                const condText = getConditionText(rule);
-                return (
-                  <Card key={rule.id} className={`flex flex-col md:flex-row gap-6 p-6 border-l-4 ${rule.enabled ? 'border-l-blue-500' : 'border-l-dark-500'} transition-all duration-300 hover:bg-dark-800/80`}>
-                    <div className="flex-1 space-y-4">
-                      <div className="flex justify-between items-start md:items-center gap-4">
-                        <div className="flex items-center gap-3">
-                          <h3 className="text-lg font-semibold">{rule.name}</h3>
-                          {!rule.enabled && <Badge variant="default">Disabled</Badge>}
-                        </div>
-                        <Toggle enabled={rule.enabled} onChange={() => toggleRule(rule.id)} />
-                      </div>
-
-                      <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 bg-dark-950/50 p-4 rounded-xl">
-                        <div className="flex-1">
-                          <div className="text-xs text-dark-400 font-bold tracking-wider mb-1">IF</div>
-                          <div className="flex items-center gap-2 text-sm">
-                            {getIconForCondition(condText)}
-                            <span>{condText}</span>
-                          </div>
-                        </div>
-                        <div className="hidden md:flex items-center justify-center text-dark-500">
-                          <ArrowRight className="w-5 h-5" />
-                        </div>
-                        <div className="flex-[2]">
-                          <div className="text-xs text-dark-400 font-bold tracking-wider mb-1">THEN</div>
-                          <div className="flex flex-wrap gap-2">
-                            {rule.actions.map((action, idx) => (
-                              <span key={idx} className="text-xs bg-blue-500/10 text-blue-300 border border-blue-500/20 px-2 py-1 rounded-md">
-                                {getActionText(action)}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
+            return (
+              <Card
+                key={rule.id}
+                className={`p-5 transition-all ${
+                  isEnabled ? 'bg-white border-slate-200 shadow-sm' : 'bg-slate-50/60 border-slate-200/60 opacity-75'
+                }`}
+              >
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3 mb-3 border-b border-slate-100">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2.5 rounded-xl ${isEnabled ? 'bg-slate-900 text-white' : 'bg-slate-200 text-slate-500'}`}>
+                      <Zap size={16} />
                     </div>
-                  
-                  <div className="flex items-center justify-end border-t md:border-t-0 md:border-l border-white/10 pt-4 md:pt-0 md:pl-6">
-                    <Button variant="danger" onClick={() => deleteRule(rule.id)} className="p-2" aria-label="Delete Rule">
-                      <Trash2 className="w-5 h-5" />
-                    </Button>
+                    <div>
+                      <h3 className="text-sm font-bold text-slate-900 leading-tight">{rule.name}</h3>
+                      <span className="text-[11px] text-slate-400">
+                        {isEnabled ? '● Routine Active' : '○ Disabled'}
+                      </span>
+                    </div>
                   </div>
-                </Card>
-              );
-            }))}
-          </div>
-        </div>
-      </main>
+
+                  <div className="flex items-center gap-3 self-end md:self-center">
+                    <Toggle
+                      enabled={isEnabled}
+                      onChange={() => toggleRule(rule.id)}
+                    />
+                    <button
+                      onClick={() => deleteRule(rule.id)}
+                      title="Delete Rule"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                </div>
+
+                {/* IF -> THEN Flow */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center text-xs">
+                  {/* IF Block */}
+                  <div className="md:col-span-5 p-3 rounded-xl bg-slate-50 border border-slate-100">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                      IF Trigger
+                    </span>
+                    <span className="font-semibold text-slate-800">{condText}</span>
+                  </div>
+
+                  {/* Flow Arrow */}
+                  <div className="hidden md:flex md:col-span-1 items-center justify-center text-slate-300">
+                    <ArrowRight size={16} />
+                  </div>
+
+                  {/* THEN Block */}
+                  <div className="md:col-span-6 p-3 rounded-xl bg-slate-50 border border-slate-100">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                      THEN Execute ({rule.actions?.length || 0} Actions)
+                    </span>
+                    <div className="flex flex-wrap gap-1.5 mt-1">
+                      {rule.actions?.map((act, i) => (
+                        <span
+                          key={i}
+                          className="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-700 text-[11px] font-medium shadow-2xs"
+                        >
+                          {getActionText(act)}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            );
+          })
+        )}
+      </div>
 
       <RuleEditor isOpen={isEditorOpen} onClose={() => setIsEditorOpen(false)} />
     </div>
   );
-};
-
-export default Automation;
+}

@@ -1,84 +1,164 @@
-import React from 'react';
-import Card from '../ui/Card';
-import Button from '../ui/Button';
+import React, { useState } from 'react';
 import { useHome } from '../../context/HomeContext';
 import { EMERGENCY_CONTACTS } from '../../data/initialData';
-import { ShieldAlert, Lock, Lightbulb, Phone } from 'lucide-react';
+import Card from '../ui/Card';
+import Button from '../ui/Button';
+import Badge from '../ui/Badge';
+import {
+  AlertTriangle,
+  Lock,
+  Lightbulb,
+  Phone,
+  ShieldAlert,
+  CheckCircle2,
+  PhoneCall
+} from 'lucide-react';
 
 export default function EmergencyPanel() {
-  const { triggerAlert, lockAllDoors, allLightsOn } = useHome();
+  const { triggerAlert, lockAllDoors, allLightsOn, alarmActive } = useHome();
+  const [confirmAction, setConfirmAction] = useState(null); // 'alarm' | 'lock' | null
+  const [calledContact, setCalledContact] = useState(null);
 
   const handleTriggerAlarm = () => {
-    if (window.confirm('Are you sure you want to trigger the emergency alarm?')) {
-      triggerAlert('Manual alarm triggered', 'System', 'manual');
-    }
+    triggerAlert('Manual SOS Alarm Activated by Resident', 'Entire House', 'manual-sos');
+    setConfirmAction(null);
   };
 
-  const handleLockDoors = () => {
-    if (window.confirm('Lock all doors?')) {
-      lockAllDoors();
-    }
+  const handleLockAll = () => {
+    lockAllDoors();
+    setConfirmAction(null);
+  };
+
+  const handleSimulatedCall = (contact) => {
+    setCalledContact(contact);
+    setTimeout(() => {
+      setCalledContact(null);
+    }, 3000);
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <h2 className="text-xl font-bold text-white flex items-center gap-2">
-        <ShieldAlert className="w-5 h-5 text-red-500" /> Emergency Controls
-      </h2>
-      
-      <Card className="flex flex-col gap-6">
-        <div className="flex flex-col gap-3">
-          <div className="text-xs text-gray-400 font-light italic mb-1">
-            * Note: These are simulated actions for the demo system.
+    <Card className="p-6 space-y-6">
+      <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div>
+          <h2 className="text-base font-bold text-slate-900">Emergency Response</h2>
+          <p className="text-xs text-slate-500">Critical perimeter overrides & emergency dispatch</p>
+        </div>
+        <Badge variant={alarmActive ? 'danger' : 'default'} pulse={alarmActive}>
+          {alarmActive ? 'ALARM ACTIVE' : 'STANDBY'}
+        </Badge>
+      </div>
+
+      {/* Emergency Overrides */}
+      <div className="space-y-2.5">
+        <span className="text-[11px] font-bold text-slate-400 tracking-wider uppercase block">
+          One-Touch Quick Actions
+        </span>
+
+        {/* Lock All Doors */}
+        <Button
+          variant="outline"
+          onClick={() => setConfirmAction('lock')}
+          className="w-full justify-start text-xs py-2.5 text-slate-800 border-slate-200 hover:bg-slate-50"
+        >
+          <Lock size={15} className="text-slate-600" />
+          <span>Lock All Perimeter Doors Now</span>
+        </Button>
+
+        {/* Turn On All Lights */}
+        <Button
+          variant="outline"
+          onClick={() => allLightsOn()}
+          className="w-full justify-start text-xs py-2.5 text-slate-800 border-slate-200 hover:bg-slate-50"
+        >
+          <Lightbulb size={15} className="text-amber-500" />
+          <span>Illuminate All House Lights (100%)</span>
+        </Button>
+
+        {/* Trigger Siren */}
+        <Button
+          variant="danger"
+          onClick={() => setConfirmAction('alarm')}
+          className="w-full justify-start text-xs py-2.5"
+        >
+          <ShieldAlert size={15} />
+          <span>Trigger High-Decibel Siren / Alarm</span>
+        </Button>
+      </div>
+
+      {/* Confirmation Dialog Overlay */}
+      {confirmAction && (
+        <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3 animate-fadeIn">
+          <div className="text-xs font-bold text-slate-900">
+            {confirmAction === 'alarm' ? '🚨 Sound Emergency Alarm?' : '🔒 Lock All Doors Across House?'}
           </div>
-          
-          <Button 
-            variant="danger" 
-            className="w-full flex items-center justify-center gap-2 py-3 shadow-[0_0_15px_rgba(239,68,68,0.2)]"
-            onClick={handleTriggerAlarm}
-          >
-            <ShieldAlert className="w-5 h-5" /> Trigger Alarm
-          </Button>
-          
-          <Button 
-            variant="secondary" 
-            className="w-full flex items-center justify-center gap-2 py-3 border border-white/10"
-            onClick={handleLockDoors}
-          >
-            <Lock className="w-5 h-5 text-blue-400" /> Lock All Doors
-          </Button>
-          
-          <Button 
-            variant="secondary" 
-            className="w-full flex items-center justify-center gap-2 py-3 border border-white/10"
-            onClick={allLightsOn}
-          >
-            <Lightbulb className="w-5 h-5 text-amber-400" /> Turn On All Lights
-          </Button>
+          <p className="text-[11px] text-slate-500">
+            {confirmAction === 'alarm'
+              ? 'This will trigger the audible intrusion alarm and broadcast alerts to emergency contacts.'
+              : 'This will lock front door, patio back door, and garage shutter immediately.'}
+          </p>
+          <div className="flex gap-2">
+            <Button
+              variant={confirmAction === 'alarm' ? 'danger' : 'primary'}
+              size="sm"
+              onClick={confirmAction === 'alarm' ? handleTriggerAlarm : handleLockAll}
+              className="text-xs"
+            >
+              Confirm
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setConfirmAction(null)}
+              className="text-xs"
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Emergency Contacts Directory */}
+      <div className="space-y-3 pt-2">
+        <span className="text-[11px] font-bold text-slate-400 tracking-wider uppercase block">
+          Direct Emergency Contacts
+        </span>
+
+        <div className="space-y-2">
+          {(EMERGENCY_CONTACTS || []).map((contact) => (
+            <div
+              key={contact.id}
+              className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between text-xs"
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-xl">{contact.icon || '📞'}</span>
+                <div>
+                  <div className="font-bold text-slate-900 leading-snug">{contact.name}</div>
+                  <div className="text-[11px] text-slate-500">{contact.number} &bull; {contact.role}</div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => handleSimulatedCall(contact)}
+                className="p-2 rounded-lg bg-white border border-slate-200 text-slate-700 hover:text-slate-900 hover:bg-slate-100 transition-colors shadow-2xs"
+                title={`Call ${contact.name}`}
+              >
+                <PhoneCall size={14} />
+              </button>
+            </div>
+          ))}
         </div>
 
-        <div className="border-t border-white/10 pt-4">
-          <h3 className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
-            <Phone className="w-4 h-4 text-gray-400" /> Emergency Contacts
-          </h3>
-          <div className="flex flex-col gap-2">
-            {EMERGENCY_CONTACTS?.map(contact => (
-              <div key={contact.id} className="flex items-center justify-between p-2 rounded-lg bg-dark-700/50">
-                <div>
-                  <div className="text-white text-sm font-semibold">{contact.name}</div>
-                  <div className="text-xs text-gray-400">{contact.role}</div>
-                </div>
-                <a href={`tel:${contact.phone}`} className="text-blue-400 text-sm hover:text-blue-300">
-                  {contact.phone}
-                </a>
-              </div>
-            ))}
-            {(!EMERGENCY_CONTACTS || EMERGENCY_CONTACTS.length === 0) && (
-              <div className="text-sm text-gray-400 italic">No emergency contacts found.</div>
-            )}
+        {calledContact && (
+          <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 font-medium flex items-center gap-2 animate-fadeIn">
+            <CheckCircle2 size={15} className="text-emerald-600 shrink-0" />
+            <span>Simulating secure dispatch call to {calledContact.name} ({calledContact.number})...</span>
           </div>
-        </div>
-      </Card>
-    </div>
+        )}
+      </div>
+
+      <div className="pt-2 text-[11px] text-slate-400 text-center">
+        * Prototype Interface: GSM & 911 auto-dispatch are simulated for portfolio demo.
+      </div>
+    </Card>
   );
 }

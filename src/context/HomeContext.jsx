@@ -5,7 +5,10 @@ import {
   CAMERAS,
   DEFAULT_AUTOMATION_RULES,
   INITIAL_EVENTS,
-  ENERGY_DATA,
+  ENERGY_DATA_DAILY,
+  ENERGY_DATA_WEEKLY,
+  ENERGY_DATA_MONTHLY,
+  DEVICE_CONSUMPTION,
 } from '../data/initialData';
 
 const HomeContext = createContext(null);
@@ -26,14 +29,17 @@ const initialState = {
   // Automation
   automationRules: JSON.parse(JSON.stringify(DEFAULT_AUTOMATION_RULES)),
 
-  // History
+  // History / Events
   events: JSON.parse(JSON.stringify(INITIAL_EVENTS)),
 
   // Environment
-  temperature: 27,
-  humidity: 62,
+  temperature: 24,
+  humidity: 58,
   energyUsage: 2.4,
-  energyData: [...ENERGY_DATA],
+  energyData: [...ENERGY_DATA_DAILY],
+  energyDataWeekly: [...ENERGY_DATA_WEEKLY],
+  energyDataMonthly: [...ENERGY_DATA_MONTHLY],
+  deviceConsumption: [...DEVICE_CONSUMPTION],
 
   // Settings
   notifications: true,

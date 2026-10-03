@@ -1,14 +1,10 @@
-export default function Card({ children, className = '', hover = false, glow = '', onClick }) {
+export default function Card({ children, className = '', hover = false, onClick }) {
   return (
     <div
       onClick={onClick}
       className={`
-        glass rounded-2xl p-6 transition-all duration-300
-        ${hover ? 'hover:bg-white/[0.04] hover:border-white/[0.12] hover:scale-[1.02] cursor-pointer' : ''}
-        ${glow === 'blue' ? 'glow-blue' : ''}
-        ${glow === 'red' ? 'glow-red' : ''}
-        ${glow === 'green' ? 'glow-green' : ''}
-        ${glow === 'amber' ? 'glow-amber' : ''}
+        bg-white border border-slate-200/80 rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)]
+        ${hover ? 'transition-all duration-200 hover:border-slate-300 hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 cursor-pointer' : ''}
         ${className}
       `}
     >

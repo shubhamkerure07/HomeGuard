@@ -2,9 +2,10 @@ import React from 'react';
 import { useHome } from '../../context/HomeContext';
 import { SECURITY_MODES } from '../../data/initialData';
 import Card from '../ui/Card';
-import { Shield, Home, Moon, Wrench } from 'lucide-react';
+import Badge from '../ui/Badge';
+import { Shield, Home, Moon, Wrench, CheckCircle2 } from 'lucide-react';
 
-const icons = {
+const iconMap = {
   home: Home,
   away: Shield,
   sleep: Moon,
@@ -14,43 +15,57 @@ const icons = {
 export default function SecurityModes() {
   const { securityMode, setSecurityMode } = useHome();
 
+  const modes = Object.values(SECURITY_MODES || {});
+
   return (
-    <div className="flex flex-col gap-4">
-      <h2 className="text-xl font-bold text-white">Security Modes</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {SECURITY_MODES.map((mode) => {
-          const Icon = icons[mode.icon] || Shield;
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-base font-bold text-slate-900">Security Arming Modes</h2>
+          <p className="text-xs text-slate-500">Select perimeter defense posture</p>
+        </div>
+        <Badge variant={securityMode === 'away' ? 'danger' : 'success'}>
+          ACTIVE: {securityMode.toUpperCase()}
+        </Badge>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
+        {modes.map((mode) => {
+          const Icon = iconMap[mode.id] || Shield;
           const isActive = securityMode === mode.id;
-          
+
           return (
-            <button 
+            <div
               key={mode.id}
               onClick={() => setSecurityMode(mode.id)}
-              className="text-left w-full focus:outline-none focus:ring-2 focus:ring-blue-500/50 rounded-2xl transition-all duration-300 hover:scale-[1.02]"
+              className={`
+                p-4 rounded-2xl border transition-all duration-200 cursor-pointer text-left
+                ${isActive
+                  ? 'bg-slate-900 text-white border-slate-900 shadow-md ring-2 ring-slate-900/10'
+                  : 'bg-white hover:bg-slate-50 text-slate-900 border-slate-200/80 shadow-xs'
+                }
+              `}
             >
-              <Card className={`h-full border transition-colors ${
-                isActive 
-                  ? `border-${mode.color}-500 bg-${mode.color}-500/10 shadow-[0_0_15px_rgba(var(--color-${mode.color}-500),0.15)]` 
-                  : 'border-white/10 hover:border-white/20'
-              }`}>
-                <div className="flex items-center gap-3 mb-3">
-                  <div className={`p-2 rounded-lg ${isActive ? `bg-${mode.color}-500/20 text-${mode.color}-400` : 'bg-dark-700 text-gray-400'}`}>
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <h3 className={`font-semibold ${isActive ? `text-${mode.color}-400` : 'text-white'}`}>
-                    {mode.name}
-                  </h3>
+              <div className="flex items-center justify-between mb-3">
+                <div className={`p-2 rounded-xl ${isActive ? 'bg-white/10 text-white' : 'bg-slate-100 text-slate-700'}`}>
+                  <Icon size={18} />
                 </div>
-                
-                <p className="text-sm text-gray-400 font-light mb-3">
-                  {mode.description}
-                </p>
-                
-                <div className="text-xs text-gray-500">
-                  <span className="font-semibold text-gray-400">Active Sensors:</span> {mode.activeSensors.join(', ')}
-                </div>
-              </Card>
-            </button>
+                {isActive && (
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500 text-white uppercase tracking-wider flex items-center gap-1">
+                    <CheckCircle2 size={10} />
+                    <span>ARMED</span>
+                  </span>
+                )}
+              </div>
+
+              <h3 className={`text-sm font-bold mb-1 ${isActive ? 'text-white' : 'text-slate-900'}`}>
+                {mode.name} Mode
+              </h3>
+
+              <p className={`text-xs leading-relaxed line-clamp-2 ${isActive ? 'text-slate-300' : 'text-slate-500'}`}>
+                {mode.description}
+              </p>
+            </div>
           );
         })}
       </div>

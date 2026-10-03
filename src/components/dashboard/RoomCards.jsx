@@ -1,59 +1,62 @@
 import React from 'react';
 import { useHome } from '../../context/HomeContext';
 import { useNavigate } from 'react-router-dom';
-import Card from '../../components/ui/Card';
-import Button from '../../components/ui/Button';
-import { Home, Zap, Thermometer, Power } from 'lucide-react';
+import Card from '../ui/Card';
+import Badge from '../ui/Badge';
+import { Thermometer, Droplets, ArrowRight } from 'lucide-react';
 
-const RoomCards = () => {
+export default function RoomCards() {
   const { rooms } = useHome();
   const navigate = useNavigate();
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {Object.values(rooms || {}).map((room) => {
-        const activeDevices = room.devices?.filter(d => d.isOn ?? (d.state === 'on')).length || 0;
-        const totalDevices = room.devices?.length || 0;
-        const lightDevice = room.devices?.find(d => d.type === 'light');
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-base font-bold text-slate-900">Room Status</h2>
+          <p className="text-xs text-slate-500">Quick appliance & climate glance</p>
+        </div>
+        <button
+          onClick={() => navigate('/rooms')}
+          className="text-xs font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-1 group"
+        >
+          <span>All 6 Rooms</span>
+          <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
+        </button>
+      </div>
 
-        return (
-          <Card 
-            key={room.id} 
-            className="p-5 cursor-pointer hover:border-blue-500/50 transition-all duration-300 group"
-            onClick={() => navigate('/rooms')}
-          >
-            <div className="flex items-center justify-between mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {Object.values(rooms || {}).slice(0, 4).map((room) => {
+          const activeDevices = room.devices?.filter(d => d.isOn ?? (d.state === 'on')).length || 0;
+          const totalDevices = room.devices?.length || 0;
+
+          return (
+            <Card
+              key={room.id}
+              hover
+              onClick={() => navigate('/rooms')}
+              className="p-4 flex items-center justify-between"
+            >
               <div className="flex items-center gap-3">
-                <div className="text-2xl p-2 bg-white/5 rounded-xl">
+                <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-xl shrink-0">
                   {room.icon || '🏠'}
                 </div>
                 <div>
-                  <h3 className="font-bold text-base text-white group-hover:text-blue-400 transition-colors">{room.name}</h3>
-                  <span className="text-xs text-slate-400">{activeDevices}/{totalDevices} Active</span>
+                  <h3 className="text-sm font-bold text-slate-900 leading-snug">{room.name}</h3>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className="text-[11px] text-slate-500">{activeDevices} of {totalDevices} On</span>
+                    <span className="text-slate-300">&bull;</span>
+                    <span className="text-[11px] font-semibold text-slate-700">{room.temperature}°C</span>
+                  </div>
                 </div>
               </div>
-              <span className="text-sm font-semibold text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded-full border border-cyan-500/20">
-                {room.temperature}°C
-              </span>
-            </div>
-            
-            <div className="flex gap-2 pt-2 border-t border-white/5">
-              <Button 
-                variant={lightDevice?.isOn ? "primary" : "outline"} 
-                className="flex-1 text-xs py-1.5" 
-                onClick={(e) => { 
-                  e.stopPropagation(); 
-                  navigate('/rooms');
-                }}
-              >
-                💡 {lightDevice?.isOn ? 'Lights On' : 'Controls'}
-              </Button>
-            </div>
-          </Card>
-        );
-      })}
+              <Badge variant={activeDevices > 0 ? 'success' : 'default'} size="sm">
+                {activeDevices > 0 ? `${activeDevices} Active` : 'Idle'}
+              </Badge>
+            </Card>
+          );
+        })}
+      </div>
     </div>
   );
-};
-
-export default RoomCards;
+}
