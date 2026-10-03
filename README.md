@@ -1,85 +1,140 @@
-# 🏠 HomeGuard
+# 🏠 HomeGuard — Smart Living. Safer Home.
 
-**Smart Living. Safer Home.**
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-6.4-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Gemini AI](https://img.shields.io/badge/Gemini_AI-2.0_Flash-4285F4?style=flat-square&logo=google&logoColor=white)](https://ai.google.dev/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
-A modern, premium smart home security dashboard built with React. Monitor your house, control smart devices, and detect possible intrusions — all from a beautiful dark-themed interface with glassmorphism design.
-
-![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?logo=tailwindcss&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green)
-
----
-
-## ✨ Features
-
-### 🏠 Smart Home Controls
-- **Room Management** — Control lights, fans, AC, TV, and other appliances per room
-- **Device Dashboard** — View and toggle all devices with filtering by type
-- **Temperature & Humidity** — Real-time environmental monitoring
-- **Energy Tracking** — 24-hour energy consumption chart
-- **Automation Rules** — Create IF/THEN rules for smart behavior
-
-### 🔐 Theft Protection System
-- **Security Center** — Centralized security monitoring
-- **Door/Window Sensors** — Track locked/open status for all entry points
-- **Motion Detection** — Monitor motion across living room, hallway, and backyard
-- **Security Modes** — HOME, AWAY, SLEEP, and MAINTENANCE modes
-- **Intrusion Alerts** — Prominent alert system with alarm simulation
-- **Camera Monitoring** — 4 simulated camera feeds with online/offline status
-- **Emergency Panel** — One-click alarm, lock all doors, and emergency contacts
-- **Security History** — Full event timeline with category filtering
-
-### 🎨 Premium Design
-- Dark theme with glassmorphism effects
-- Subtle gradients and glow animations
-- Responsive layout (mobile + desktop)
-- Interactive 2D floor plan with sensor visualization
-- Smooth page transitions
-- Professional typography with Inter font
+> A modern, premium **Smart Home + Theft Protection** platform built with a minimalist **White UI design system**, multi-page navigation, IoT simulation engine, and integrated **Gemini AI Security Copilot**.
 
 ---
 
-## 📸 Pages
+## 📸 Platform Preview & Design Language
 
-| Page | Description |
-|------|-------------|
-| **Dashboard** | Main overview with stats, security status, energy chart, room cards, floor plan |
-| **Security Center** | Sensor monitoring, security modes, alerts, emergency controls |
-| **Rooms** | Interactive room cards with detailed device controls |
-| **Devices** | All devices in one view with filtering and toggles |
-| **Cameras** | Simulated camera feeds with motion detection indicators |
-| **Automation** | Create and manage IF/THEN automation rules |
-| **History** | Event timeline with category filtering |
-| **Settings** | Profile, notifications, and system configuration |
+HomeGuard is crafted with a clean, high-contrast, minimalist **White UI design system**:
+* **Surfaces**: Crisp white cards (`#ffffff`) on soft slate backgrounds (`#f8fafc`).
+* **Visual Hierarchy**: Refined typography, spacious layouts, thin borders (`border-slate-200/80`), and delicate shadows (`shadow-sm`).
+* **Status Discipline**: Colors reserved strictly for system feedback:
+  * 🟢 **Safe / Armed**: Normal perimeter and operating appliances.
+  * 🟡 **Warning**: Environmental drift or security maintenance.
+  * 🔴 **Breach / Alert**: Perimeter intrusions and audible alarm triggers.
+  * 🔵 **Information**: Active cameras and network status.
+
+```text
+┌──────────────────────┬────────────────────────────────────────────────────────┐
+│      HOMEGUARD       │  Good evening, Shubham                                 │
+│  Smart Living & Safe │  [ 🔒 Lock Doors ]  [ ✨ Gemini AI ]  [ 🟢 HOME ARMED ] │
+├──────────────────────┼────────────────────────────────────────────────────────┤
+│                      │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐   │
+│  📊 Overview         │  │ 24°C Temp│ │ 58% Humid│ │ 2.4kW Pwr│ │ 6 Active │   │
+│  🛡️ Security         │  └──────────┘ └──────────┘ └──────────┘ └──────────┘   │
+│  🛋️ Rooms            │  ┌─────────────────────────┐ ┌──────────────────────┐  │
+│  📱 Devices          │  │ Perimeter Status Matrix │ │ 24h Energy Trend     │  │
+│  📹 Cameras          │  │ • Front Door: LOCKED 🔒 │ │ [Area Chart ~2.4kW]  │  │
+│  ⚡ Automation       │  │ • Windows: CLOSED 🪟    │ ├──────────────────────┤  │
+│  ⏱️ Events           │  │ • Motion: CLEAR 👤      │ │ 6 Smart Rooms Hub    │  │
+│  ⚡ Energy           │  ├─────────────────────────┤ │ • Living Room (24°C) │  │
+│  ⚙️ Settings         │  │ 2D Architectural Plan   │ │ • Master Bed (22°C)  │  │
+│                      │  │ [SVG Blueprint & Pins]  │ │ • Kitchen Lab (26°C) │  │
+│                      │  └─────────────────────────┘ └──────────────────────┘  │
+└──────────────────────┴────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🧭 Multi-Page Architecture
+
+The platform is organized across **9 dedicated pages**:
+
+| Route | Page | Purpose & Key Features |
+| :--- | :--- | :--- |
+| `/` | **Overview** | Instant situational awareness, 4 real-time metric cards, perimeter status, 2D architectural SVG floor plan, 24h energy load, and Hardware Simulation Lab. |
+| `/security` | **Security Center** | Arming stance selector (`HOME`, `AWAY`, `SLEEP`, `MAINTENANCE`), sensor matrix with filter tabs, SOS alarm overrides, and emergency contact dispatch. |
+| `/rooms` | **Rooms** | 6 individual zones (**Living Room**, **Bedroom**, **Kitchen**, **Office**, **Bathroom**, **Garage**) with climate telemetry, light counts, and room management modals. |
+| `/devices` | **Devices** | Centralized appliance hub categorized by *Lights*, *Fans*, *AC / Climate*, *TV*, *Appliances*, and *Locks* with continuous brightness, speed, and thermostat sliders. |
+| `/cameras` | **Cameras** | 4 simulated RTSP surveillance feeds (**Front Entrance HD**, **Living Room 360°**, **Backyard NightVision**, **Garage Bay**) with running clock, REC overlay, snapshot capture, and fullscreen modal. |
+| `/automation` | **Automation** | Conditional smart routines (*Night Lockdown*, *Away Fortress*, *Welcome Home*) with `IF` triggers and `THEN` execution lists, plus a custom Rule Builder. |
+| `/events` | **Security Events** | Chronological audit trail and hybrid timeline/table with category filters (*All*, *Security*, *Doors*, *Windows*, *Motion*, *Devices*), search, and CSV export simulation. |
+| `/energy` | **Energy Analytics** | Comprehensive power intelligence with 24-hour, weekly, and monthly consumption charts, appliance breakdown percentages, projected billing, and Eco Score. |
+| `/settings` | **Settings** | Household profile management, push notification and siren sound toggles, default security stance, and ESP32 IoT hardware bridge configuration. |
+
+---
+
+## ✨ Features & Functionality
+
+### 1. 🤖 Gemini AI Security Copilot
+* Integrated directly into the top header via the **`✨ Gemini AI`** button.
+* **Context Awareness**: Queries live perimeter state, active alarms, environmental metrics, and room devices.
+* **Natural Language Voice/Chat Control**:
+  * *"Audit my perimeter security"* ➔ Scans all doors, windows, and PIR motion nodes.
+  * *"Lock down home and set to Away mode"* ➔ Executes emergency lockdown sequence in real-time.
+  * *"Turn on all lights"* ➔ Illuminates every room to 100% brightness.
+  * *"Analyze energy consumption"* ➔ Identifies top energy consumers and suggests savings.
+
+### 2. 🔐 Theft Protection System
+* **4 Security Modes**:
+  * **Home**: Perimeter doors and windows armed; interior motion disarmed.
+  * **Away**: Maximum fortress posture; all internal and external sensors, cameras, and alarms primed.
+  * **Sleep**: Night perimeter armed; bedrooms relaxed for free movement.
+  * **Maintenance**: Sensors paused for maintenance or guest access.
+* **Intrusion Alerts & Alarm Protocol**:
+  * Clean breach banner and modal with breach timestamp, sensor ID, and location.
+  * One-touch **"View Camera"** and **"Silence Alarm"** controls.
+* **Emergency Response**:
+  * Instant lockdown for all doors and garage shutters.
+  * Immediate illumination of all indoor and outdoor floodlights.
+  * Direct emergency contacts for Police (100), Fire (101), Ambulance (102), and Community Guards.
+
+### 3. 💡 Smart Home & Climate Controls
+* **Dimmable Lighting**: Smooth brightness sliders (0% – 100%).
+* **Speed Fans**: 5-level discrete speed selection.
+* **Dual Inverter Climate**: Thermostat range (16°C – 30°C) with `Cool`, `Heat`, and `Auto` modes.
+* **2D Architectural Blueprint**: Vector floor plan illustrating Living Room, Bedroom, Foyer, Kitchen, and Office with interactive glowing sensor pins.
+
+### 4. 🧪 Simulation Lab (Hardware Testing Engine)
+* **Threat Scenarios**: One-click front door breach and bedroom window intrusion testing.
+* **Sensor Overrides**: Manually toggle any magnetic reed switch or PIR sensor between *Locked*, *Unlocked*, *Open*, *Triggered*, or *Offline*.
+* **Climate Adjustments**: Live sliders for ambient temperature (16°C – 38°C) and relative humidity (20% – 90%).
+
+---
+
+## 🛠️ Tech Stack & Architecture
+
+* **Framework**: React 18 with Vite 6
+* **Styling**: Tailwind CSS with custom White UI theme
+* **Routing**: React Router v6 (9 responsive routes + mobile bottom navigation)
+* **State Management**: Centralized React Context (`HomeContext`) with `useReducer` action dispatchers
+* **Icons**: Lucide React
+* **Charts**: Recharts (Area, Bar, responsive tooltips)
+* **Font**: Inter (`sans-serif`)
 
 ---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-
-- [Node.js](https://nodejs.org/) v18 or higher
-- npm v9 or higher
+* [Node.js](https://nodejs.org/) (v18 or higher recommended)
+* npm or yarn
 
 ### Installation
-
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/HomeGuard.git
+git clone https://github.com/shubhamkerure07/HomeGuard.git
+
+# Navigate into the project directory
 cd HomeGuard
 
 # Install dependencies
 npm install
 
-# Start development server
+# Start the development server
 npm run dev
 ```
 
-The app will open at `http://localhost:5173`
+Open [http://localhost:5173/](http://localhost:5173/) in your browser.
 
-### Build for Production
-
+### Building for Production
 ```bash
 npm run build
 npm run preview
@@ -87,109 +142,29 @@ npm run preview
 
 ---
 
-## 🧪 Simulation Engine
+## 🔌 Future IoT Hardware Bridge (ESP32)
 
-Since this is a prototype without physical hardware, HomeGuard includes a **Simulation Panel** (available on the Dashboard) that lets you test all features:
+HomeGuard is architected to seamlessly interface with physical microcontrollers:
 
-| Action | What Happens |
-|--------|-------------|
-| **Simulate Intrusion** | Opens front door → Triggers motion sensor → Shows security alert → Activates alarm |
-| **Reset All Sensors** | Returns all sensors to normal/locked/closed state |
-| **Individual Controls** | Change any sensor status independently |
-| **Environment** | Adjust temperature and humidity with sliders |
-
-The dashboard updates in real-time when sensors change state.
-
----
-
-## 🏗️ Architecture
-
-```
-src/
-├── components/
-│   ├── automation/       # Rule editor
-│   ├── cameras/          # Camera feed cards
-│   ├── dashboard/        # Status cards, energy chart, room cards, security overview
-│   ├── floorplan/        # Interactive 2D SVG floor plan
-│   ├── layout/           # Sidebar, Header, Layout wrapper
-│   ├── rooms/            # Room detail modal, device controls
-│   ├── security/         # Sensor cards, security modes, alerts, emergency
-│   ├── simulation/       # Simulation control panel
-│   └── ui/               # Reusable: Card, Modal, Toggle, Badge, Button
-├── context/
-│   └── HomeContext.jsx    # Central state management (React Context + useReducer)
-├── data/
-│   └── initialData.js     # All simulated data (rooms, sensors, cameras, rules)
-├── pages/                 # 8 page components
-├── App.jsx                # Router setup
-├── main.jsx               # Entry point
-└── index.css              # Global styles, glassmorphism, animations
+```text
+[ Magnetic Reed Switches ] ──┐
+[ PIR Motion Sensors    ] ──┼──► [ ESP32 MCU ] ──► [ MQTT / WebSockets ] ──► [ HomeGuard UI ]
+[ DHT22 Temp / Humidity ] ──┤
+[ 5V Relay Modules       ] ──┘
 ```
 
-### State Management
-
-All state is managed through `HomeContext` using React's `useReducer`. This provides:
-- Centralized state for rooms, devices, sensors, cameras, events
-- Action creators for all mutations (toggle devices, change modes, trigger alerts)
-- Computed values (active device count, all doors locked, etc.)
-- Clean separation ready for backend/IoT integration
-
----
-
-## 🔌 Future IoT Integration
-
-The architecture is designed so simulated data can be **replaced with real hardware**:
-
-### Supported Hardware (Future)
-
-| Component | Hardware | Purpose |
-|-----------|----------|---------|
-| Microcontroller | **ESP32** | WiFi-connected hub |
-| Motion Sensor | **PIR (HC-SR501)** | Detect movement |
-| Door/Window | **Magnetic Reed Switch** | Detect open/close |
-| Light Sensor | **LDR** | Ambient light detection |
-| Temp/Humidity | **DHT11 / DHT22** | Environmental monitoring |
-| Relay | **Relay Module** | Control appliances |
-| Camera | **ESP32-CAM** | Live video feed |
-
-### Integration Approach
-
-1. **ESP32 Firmware** — Flash ESP32 with firmware that reads sensors and sends data via MQTT or HTTP
-2. **Backend API** — Create a Node.js/Python backend that:
-   - Receives sensor data from ESP32
-   - Stores events in a database
-   - Serves data to the React frontend via WebSocket/REST
-3. **Replace Context** — Swap `HomeContext`'s `useReducer` with API calls:
-   ```js
-   // Current (simulated)
-   dispatch({ type: 'TOGGLE_DEVICE', payload: { roomId, deviceId } });
-   
-   // Future (real)
-   await fetch('/api/devices/toggle', { method: 'POST', body: JSON.stringify({ roomId, deviceId }) });
-   ```
-4. **Camera Feeds** — Replace placeholder divs with `<img>` tags streaming from ESP32-CAM MJPEG endpoints
-
----
-
-## 🛠️ Tech Stack
-
-- **React 18** — UI framework
-- **Vite 6** — Build tool
-- **Tailwind CSS 3** — Utility-first CSS
-- **React Router 6** — Client-side routing
-- **Recharts** — Energy consumption charts
-- **Lucide React** — Beautiful consistent icons
-- **React Context + useReducer** — State management
+* **MQTT Telemetry Topic**: `/homeguard/telemetry`
+* **MQTT Commands Topic**: `/homeguard/actuators`
+* **Camera Streaming**: Local RTSP / MJPEG camera streams over local NVR.
 
 ---
 
 ## 📄 License
 
-MIT License — feel free to use this for your portfolio, learning, or as a starting point for a real IoT project.
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
 ---
 
 <p align="center">
-  <b>🏠 HomeGuard</b><br>
-  <i>Smart Living. Safer Home.</i>
+  Built with ❤️ for next-generation smart home security.
 </p>
