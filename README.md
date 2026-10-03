@@ -12,42 +12,69 @@
 ---
 
 ### 🌐 Live Production Deployment
-🔗 **Live Application URL**: [https://homeguard-app.vercel.app/](https://homeguard-app.vercel.app/)
-
-* Automated continuous deployment enabled: every push to `main` updates the live site instantly on Vercel.
+* 🔗 **Live Application URL**: [https://homeguard-app.vercel.app/](https://homeguard-app.vercel.app/)
+* ⚡ **Hosting**: Vercel Edge Network with automatic continuous deployment from `main`.
 
 ---
 
-## 📸 Platform Preview & Design Language
+## 🎬 Official Cinematic Product Launch Video
 
-HomeGuard is crafted with a clean, high-contrast, minimalist **White UI design system**:
-* **Surfaces**: Crisp white cards (`#ffffff`) on soft slate backgrounds (`#f8fafc`).
-* **Visual Hierarchy**: Refined typography, spacious layouts, thin borders (`border-slate-200/80`), and delicate shadows (`shadow-sm`).
-* **Status Discipline**: Colors reserved strictly for system feedback:
-  * 🟢 **Safe / Armed**: Normal perimeter and operating appliances.
-  * 🟡 **Warning**: Environmental drift or security maintenance.
-  * 🔴 **Breach / Alert**: Perimeter intrusions and audible alarm triggers.
-  * 🔵 **Information**: Active cameras and network status.
+Experience HomeGuard in action through our 84-second cinematic product film:
 
-```text
-┌──────────────────────┬────────────────────────────────────────────────────────┐
-│      HOMEGUARD       │  Good evening, Shubham                                 │
-│  Smart Living & Safe │  [ 🔒 Lock Doors ]  [ ✨ Gemini AI ]  [ 🟢 HOME ARMED ] │
-├──────────────────────┼────────────────────────────────────────────────────────┤
-│                      │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐   │
-│  📊 Overview         │  │ 24°C Temp│ │ 58% Humid│ │ 2.4kW Pwr│ │ 6 Active │   │
-│  🛡️ Security         │  └──────────┘ └──────────┘ └──────────┘ └──────────┘   │
-│  🛋️ Rooms            │  ┌─────────────────────────┐ ┌──────────────────────┐  │
-│  📱 Devices          │  │ Perimeter Status Matrix │ │ 24h Energy Trend     │  │
-│  📹 Cameras          │  │ • Front Door: LOCKED 🔒 │ │ [Area Chart ~2.4kW]  │  │
-│  ⚡ Automation       │  │ • Windows: CLOSED 🪟    │ ├──────────────────────┤  │
-│  ⏱️ Events           │  │ • Motion: CLEAR 👤      │ │ 6 Smart Rooms Hub    │  │
-│  ⚡ Energy           │  ├─────────────────────────┤ │ • Living Room (24°C) │  │
-│  ⚙️ Settings         │  │ 2D Architectural Plan   │ │ • Master Bed (22°C)  │  │
-│                      │  │ [SVG Blueprint & Pins]  │ │ • Kitchen Lab (26°C) │  │
-│                      │  └─────────────────────────┘ └──────────────────────┘  │
-└──────────────────────┴────────────────────────────────────────────────────────┘
-```
+[![Watch HomeGuard Cinematic Launch Video](docs/screenshots/01_dashboard.png)](docs/video/homeguard_cinematic_launch.mp4)
+
+> 📹 **Watch or Download Full Video**: [`docs/video/homeguard_cinematic_launch.mp4`](docs/video/homeguard_cinematic_launch.mp4) (Full HD 1080p, 84 seconds, H.264 + AAC Audio)
+
+---
+
+## 📸 High-Resolution UI Screenshots
+
+### 1. Situational Dashboard & Overview
+The central cockpit displaying current armed mode, environmental vitals, real-time perimeter status, 24h energy load, and the hardware simulation engine.
+
+![HomeGuard Dashboard](docs/screenshots/01_dashboard.png)
+
+---
+
+### 2. Interactive 2D Architectural Floor Plan
+Detailed architectural SVG blueprint with live interactive magnetic reed switch and PIR motion sensor pins.
+
+![HomeGuard Interactive Floor Plan](docs/screenshots/02_floorplan.png)
+
+---
+
+### 3. Security Operations Center & Mode Selector
+Stance selector (`HOME`, `AWAY`, `SLEEP`, `MAINTENANCE`), perimeter sensor matrix, threat verification diagnostics, and direct emergency contacts.
+
+![HomeGuard Security Center](docs/screenshots/03_security_center.png)
+
+---
+
+### 4. Instant Intrusion Verification & Security Alert Modal
+High-priority breach alert modal triggered upon perimeter compromise, displaying breach location, timestamp, live camera view, and siren controls.
+
+![HomeGuard Intrusion Alert Modal](docs/screenshots/04_security_alert.png)
+
+---
+
+### 5. Smart Home Device & Appliance Hub
+Comprehensive control for dimmable lighting, multi-speed fans, dual-inverter climate thermostats (16°C – 30°C), televisions, and smart deadbolt locks.
+
+![HomeGuard Devices Hub](docs/screenshots/05_devices.png)
+
+---
+
+### 6. Multi-Camera RTSP Surveillance Grid
+4 active surveillance feeds (Front Walkway HD, Living Room 360°, Backyard NightVision, Garage Bay) with running timestamps and snapshot capabilities.
+
+![HomeGuard Camera Grid](docs/screenshots/06_cameras.png)
+
+---
+
+### 7. Real-Time Energy Telemetry & Consumption
+24-hour load curves, appliance breakdown metrics, projected monthly bills, and household Eco Efficiency scoring.
+
+![HomeGuard Energy Telemetry](docs/screenshots/07_energy.png)
 
 ---
 
@@ -69,7 +96,7 @@ The platform is organized across **9 dedicated pages**:
 
 ---
 
-## ✨ Features & Functionality
+## ✨ Core Capabilities
 
 ### 1. 🤖 Gemini AI Security Copilot
 * Integrated directly into the top header via the **`✨ Gemini AI`** button.
@@ -98,81 +125,48 @@ The platform is organized across **9 dedicated pages**:
 * **Dimmable Lighting**: Smooth brightness sliders (0% – 100%).
 * **Speed Fans**: 5-level discrete speed selection.
 * **Dual Inverter Climate**: Thermostat range (16°C – 30°C) with `Cool`, `Heat`, and `Auto` modes.
-* **2D Architectural Blueprint**: Vector floor plan illustrating Living Room, Bedroom, Foyer, Kitchen, and Office with interactive glowing sensor pins.
-
-### 4. 🧪 Simulation Lab (Hardware Testing Engine)
-* **Threat Scenarios**: One-click front door breach and bedroom window intrusion testing.
-* **Sensor Overrides**: Manually toggle any magnetic reed switch or PIR sensor between *Locked*, *Unlocked*, *Open*, *Triggered*, or *Offline*.
-* **Climate Adjustments**: Live sliders for ambient temperature (16°C – 38°C) and relative humidity (20% – 90%).
+* **Smart Deadbolts**: Instant perimeter locking with visual confirmation.
 
 ---
 
-## 🛠️ Tech Stack & Architecture
+## 🛠️ Technology Stack
 
-* **Framework**: React 18 with Vite 6
-* **Styling**: Tailwind CSS with custom White UI theme
-* **Routing**: React Router v6 (9 responsive routes + mobile bottom navigation)
-* **State Management**: Centralized React Context (`HomeContext`) with `useReducer` action dispatchers
+* **Frontend**: React 18 (Vite SPA)
+* **Styling**: Tailwind CSS (White UI Design System)
 * **Icons**: Lucide React
-* **Charts**: Recharts (Area, Bar, responsive tooltips)
-* **Font**: Inter (`sans-serif`)
+* **Charts**: Recharts (Energy telemetry & power load curves)
+* **Routing**: React Router DOM v6
+* **State Management**: React Context (`HomeContext`) with persistent localStorage
+* **AI Integration**: Google Gemini API via SDK
+* **Production Deployment**: Vercel Edge Network
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Local Development Setup
 
-### Prerequisites
-* [Node.js](https://nodejs.org/) (v18 or higher recommended)
-* npm or yarn
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/shubhamkerure07/HomeGuard.git
+   cd HomeGuard
+   ```
 
-### Installation
-```bash
-# Clone the repository
-git clone https://github.com/shubhamkerure07/HomeGuard.git
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-# Navigate into the project directory
-cd HomeGuard
+3. **Start local Vite development server**:
+   ```bash
+   npm run dev
+   ```
+   Open `http://localhost:5173` in your browser.
 
-# Install dependencies
-npm install
-
-# Start the development server
-npm run dev
-```
-
-Open [http://localhost:5173/](http://localhost:5173/) in your browser.
-
-### Building for Production
-```bash
-npm run build
-npm run preview
-```
-
----
-
-## 🔌 Future IoT Hardware Bridge (ESP32)
-
-HomeGuard is architected to seamlessly interface with physical microcontrollers:
-
-```text
-[ Magnetic Reed Switches ] ──┐
-[ PIR Motion Sensors    ] ──┼──► [ ESP32 MCU ] ──► [ MQTT / WebSockets ] ──► [ HomeGuard UI ]
-[ DHT22 Temp / Humidity ] ──┤
-[ 5V Relay Modules       ] ──┘
-```
-
-* **MQTT Telemetry Topic**: `/homeguard/telemetry`
-* **MQTT Commands Topic**: `/homeguard/actuators`
-* **Camera Streaming**: Local RTSP / MJPEG camera streams over local NVR.
+4. **Production Build**:
+   ```bash
+   npm run build
+   ```
 
 ---
 
 ## 📄 License
-
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
-
----
-
-<p align="center">
-  Built with ❤️ for next-generation smart home security.
-</p>
+MIT License. See [LICENSE](LICENSE) for details.
