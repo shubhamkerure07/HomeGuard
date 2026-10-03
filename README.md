@@ -5,8 +5,15 @@
 [![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Gemini AI](https://img.shields.io/badge/Gemini_AI-2.0_Flash-4285F4?style=flat-square&logo=google&logoColor=white)](https://ai.google.dev/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshubhamkerure07%2FHomeGuard)
 
 > A modern, premium **Smart Home + Theft Protection** platform built with a minimalist **White UI design system**, multi-page navigation, IoT simulation engine, and integrated **Gemini AI Security Copilot**.
+
+---
+
+### 🌐 Live One-Click Vercel Deployment
+Deploy this platform instantly to Vercel with zero configuration:
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshubhamkerure07%2FHomeGuard)
 
 ---
 
